@@ -68,7 +68,7 @@ serviceMonitor:
 ## Alertmanager container image
 ##
 image:
-  repository: quay.io/prometheus/alertmanager
+  repository: quay.io/prometheus/alertmanager1
   tag: v0.15.2
 
 ## Labels to be added to the Alertmanager

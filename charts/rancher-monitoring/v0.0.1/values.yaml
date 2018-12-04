@@ -70,7 +70,7 @@ alertmanager:
   enabled: false
   apiGroup: "monitoring.coreos.com"
   image:
-    repository: quay.io/prometheus/alertmanager
+    repository: quay.io/prometheus/alertmanager112
     tag: v0.15.2
   nodeSelector:
     beta.kubernetes.io/os: linux
