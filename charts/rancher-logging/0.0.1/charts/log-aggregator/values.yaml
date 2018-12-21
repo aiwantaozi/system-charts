@@ -1,0 +1,43 @@
+enabledRBAC: true
+
+labels: {}
+## Log Aggregator container image
+##
+image:
+  repository: rancher/log-aggregator
+  tag: v0.1.4
+
+nodeSelector: {}
+
+tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+  - key: "node-role.kubernetes.io/etcd"
+    operator: "Exists"
+  - key: "node-role.kubernetes.io/controlplane"
+    operator: "Exists"
+
+## If true, the Operator won't process any Log Aggregator configuration changes
+##
+paused: false
+
+## Number of Log Aggregator replicas desired
+##
+replicaCount: 1
+
+## Resource limits & requests
+## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources: {}
+  # requests:
+  #   memory: 400Mi
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+## flexvolume dir
+flexVolumeDir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
