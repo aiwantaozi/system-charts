@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fluentd.fullname" . }}-precan-config
+  labels:
+    app: {{ include "fluentd.name" . }}
+    chart: {{ template "fluentd.version" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    kubernetes.io/cluster-service: "true"
+data:
+{{- range $key, $value := .Values.configMaps }}
+  {{ $key }}: |-
+{{ $value | indent 4 }}
+{{- end }}

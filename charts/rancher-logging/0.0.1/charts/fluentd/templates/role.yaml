@@ -1,0 +1,19 @@
+{{- if .Values.podSecurityPolicy.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: {{ template "fluentd.fullname" . }}
+  labels:
+    app: {{ include "fluentd.name" . }}
+    chart: {{ template "fluentd.version" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    kubernetes.io/cluster-service: "true"
+rules:
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - {{ template "fluentd.fullname" . }}
+{{- end }}

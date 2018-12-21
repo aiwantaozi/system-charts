@@ -1,0 +1,5 @@
+fluentd:
+  enabled: false
+log-aggregator:
+  enabled: true
+  flexVolumeDir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
