@@ -2,10 +2,6 @@ image:
   repository: rancher/fluentd
   tag: v0.1.11
   pullPolicy: IfNotPresent
-# initImage:
-#   repository: rancher/fluentd
-#   tag: v0.1.11
-#   pullPolicy: IfNotPresent
 
 resources: {}
   # limits:
@@ -16,8 +12,8 @@ resources: {}
   #   memory: 200Mi
 env:
 
-# initCommand: '["fluentd", "--dry-run", "-c", "/fluentd/etc/config/std/fluent.conf"]'
-command: '["fluentd", "-c", "/fluentd/etc/config/std/fluent.conf"]'
+command: '["fluentd", "--dry-run", "-c", "/fluentd/etc/config/std/fluent.conf"]'
+# command: '["fluentd", "-c", "/fluentd/etc/config/std/fluent.conf"]'
 
 rbac:
   create: true
@@ -84,15 +80,15 @@ configmapReload:
 
 secrets:
   fluent.conf: |-
-    @include /fluentd/etc/config/system/system.conf
-    @include /fluentd/etc/config/precan/custom_cluster.conf
-    @include /fluentd/etc/config/precan/custom_project.conf
+    @include /fluentd/etc/config/std/*.conf
+    # @include /fluentd/etc/config/std/custom_cluster.conf
+    # @include /fluentd/etc/config/std/custom_project.conf
 
     @include /fluentd/etc/config/custom/project/*.conf
     @include /fluentd/etc/config/custom/cluster/*.conf
 
-    @include /fluentd/etc/config/project/*.conf
-    @include /fluentd/etc/config/cluster/*.conf
+    # @include /fluentd/etc/config/project/*.conf
+    # @include /fluentd/etc/config/cluster/*.conf
   system.conf: |-
     <source>
       @type prometheus

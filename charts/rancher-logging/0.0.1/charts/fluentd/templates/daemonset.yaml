@@ -31,16 +31,32 @@ spec:
       # Note that this does not guarantee admission on the nodes (#40573).
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
-        # checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }} #todo
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
 {{- if .Values.annotations }}
 {{ toYaml .Values.annotations | indent 8 }}
 {{- end }}
     spec:
       serviceAccountName: {{ template "fluentd.fullname" . }}
+      # initContainers:
+      # - name: "dry-run"
+      #   image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
+      #   imagePullPolicy: {{ .Values.initImage.pullPolicy | quote }}
+      #   {{- if .Values.initCommand }}
+      #   command: {{ .Values.initCommand }}
+      #   {{ end }}
+      #   volumeMounts:
+      #   - mountPath: /fluentd/etc/config/custom
+      #     name: custom
+      #   - mountPath: /fluentd/etc/config/std
+      #     name: config
       containers:
       - name: {{ template "fluentd.fullname" . }}
         image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- if .Values.command }}
+        command: {{ .Values.command }}
+        {{ end }}
+        # command: ["fluentd", "--dry-run", "-c", "/fluentd/etc/config/std/fluent.conf"]
         env:
         {{- if .Values.env }}
         {{- range $key, $value := .Values.env }}
@@ -55,16 +71,20 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
-        - mountPath: /fluentd/etc/config/cluster
-          name: clusterlogging
-        - mountPath: /fluentd/etc/config/project
-          name: projectlogging
-        - mountPath: /fluentd/etc/config/custom/cluster
-          name: clustercustomlogconfig
-        - mountPath: /fluentd/etc/config/custom/project
-          name: projectcustomlogconfig
-        - mountPath: /fluentd/etc/config/precan
-          name: precanconfig
+        # - mountPath: /fluentd/etc/config/cluster
+        #   name: clusterlogging
+        # - mountPath: /fluentd/etc/config/project
+        #   name: projectlogging
+        # - mountPath: /fluentd/etc/config/custom/cluster
+        #   name: clustercustomlogconfig
+        # - mountPath: /fluentd/etc/config/custom/project
+        #   name: projectcustomlogconfig
+        # - mountPath: /fluentd/etc/config/precan
+        #   name: precanconfig
+        - mountPath: /fluentd/etc/config/custom
+          name: custom
+        - mountPath: /fluentd/etc/config/std
+          name: config
         - mountPath: {{ .Values.cluster.dockerRoot }}
           name: dockerroot
         - mountPath: /var/log/containers
@@ -77,8 +97,8 @@ spec:
           name: customlog
         - mountPath: /fluentd/log
           name: fluentdlog
-        - mountPath: /fluentd/etc/ssl
-          name: sslconfig
+        # - mountPath: /fluentd/etc/ssl
+        #   name: sslconfig
         - name: libsystemddir
           mountPath: /host/lib
           readOnly: true
@@ -132,36 +152,36 @@ spec:
         imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
         args:
           - --volume-dir=/fluentd/etc/config
-          - --volume-dir=/fluentd/etc/ssl
+          # - --volume-dir=/fluentd/etc/ssl
           - --webhook-method=GET
           - --webhook-url=http://127.0.0.1:24444/api/config.reload
         resources:
         {{ toYaml .Values.configmapReload.resources | indent 12 }}
         volumeMounts:
-          - mountPath: /fluentd/etc/config/cluster
-            name: clusterlogging
-          - mountPath: /fluentd/etc/config/project
-            name: projectlogging
-          - mountPath: /fluentd/etc/config/custom/cluster
-            name: clustercustomlogconfig
-          - mountPath: /fluentd/etc/config/custom/project
-            name: projectcustomlogconfig
-          - mountPath: /fluentd/etc/ssl
-            name: sslconfig
+          # - mountPath: /fluentd/etc/config/cluster
+          #   name: clusterlogging
+          # - mountPath: /fluentd/etc/config/project
+          #   name: projectlogging
+          - mountPath: /fluentd/etc/config/custom
+            name: custom
+          - mountPath: /fluentd/etc/config/std
+            name: config
+          # - mountPath: /fluentd/etc/config/
+          #   name: config
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: clusterlogging
-        secret:
-          secretName: {{ .Values.config.clusterLoggingSecretName }}
-      - name: projectlogging
-        secret:
-          secretName: {{ .Values.config.projectLoggingSecretName }}
+      # - name: clusterlogging
+      #   secret:
+      #     secretName: {{ .Values.config.clusterLoggingSecretName }}
+      # - name: projectlogging
+      #   secret:
+      #     secretName: {{ .Values.config.projectLoggingSecretName }}
       - hostPath:
-          path: /var/lib/rancher/fluentd/etc/config/custom/cluster
-        name: clustercustomlogconfig
-      - hostPath:
-          path: /var/lib/rancher/fluentd/etc/config/custom/project
-        name: projectcustomlogconfig
+          path: /var/lib/rancher/fluentd/etc/config/custom
+        name: custom
+      # - hostPath:
+      #     path: /var/lib/rancher/fluentd/etc/config/custom/project
+      #   name: projectcustomlogconfig
       - hostPath:
           path: {{ .Values.cluster.dockerRoot }}
         name: dockerroot
@@ -180,12 +200,12 @@ spec:
       - hostPath:
           path: /var/lib/rancher/fluentd/log
         name: fluentdlog
-      - name: sslconfig
+      - name: config
         secret:
-          secretName: {{ .Values.config.sslConfigSecretName }}
-      - name: precanconfig
-        configMap:
-          name: {{ template "fluentd.fullname" . }}-precan-config
+          secretName: {{ template "fluentd.fullname" . }}
+      # - name: precanconfig
+      #   configMap:
+      #     name: {{ template "fluentd.fullname" . }}-precan-config
       # It is needed to copy systemd library to decompress journals //todo
       - name: libsystemddir
         hostPath:
