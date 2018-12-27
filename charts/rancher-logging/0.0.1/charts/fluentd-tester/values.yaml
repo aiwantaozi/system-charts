@@ -82,9 +82,11 @@ configmapReload:
 
 secrets:
   fluent.conf: |-
-    @include /fluentd/etc/config/std/*.conf
-    # @include /fluentd/etc/config/std/custom_cluster.conf
-    # @include /fluentd/etc/config/std/custom_project.conf
+    @include /fluentd/etc/config/std/system.conf.conf
+    @include /fluentd/etc/config/std/custom_cluster.conf
+    @include /fluentd/etc/config/std/custom_project.conf
+    @include /fluentd/etc/config/std/legacy_custom_cluster.conf
+    @include /fluentd/etc/config/std/legacy_custom_project.conf
 
     @include /fluentd/etc/config/custom/project/*.conf
     @include /fluentd/etc/config/custom/cluster/*.conf
