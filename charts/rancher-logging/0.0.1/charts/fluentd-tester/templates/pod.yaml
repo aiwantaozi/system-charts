@@ -13,6 +13,7 @@ metadata:
 {{ toYaml .Values.labels | indent 4 }}
 {{- end }}
 spec:
+  serviceAccountName: {{ template "fluentd-tester.fullname" . }}
   containers:
   - name: "dry-run"
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
