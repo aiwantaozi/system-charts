@@ -50,7 +50,6 @@ spec:
         {{- if .Values.command }}
         command: {{ .Values.command }}
         {{ end }}
-        # command: ["fluentd", "--dry-run", "-c", "/fluentd/etc/config/std/fluent.conf"]
         env:
         {{- if .Values.env }}
         {{- range $key, $value := .Values.env }}
@@ -65,20 +64,12 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
-        # - mountPath: /fluentd/etc/config/cluster
-        #   name: clusterlogging
-        # - mountPath: /fluentd/etc/config/project
-        #   name: projectlogging
-        # - mountPath: /fluentd/etc/config/custom/cluster
-        #   name: clustercustomlogconfig
-        # - mountPath: /fluentd/etc/config/custom/project
-        #   name: projectcustomlogconfig
-        # - mountPath: /fluentd/etc/config/precan
-        #   name: precanconfig
         - mountPath: /fluentd/etc/config/custom
           name: custom
-        - mountPath: /fluentd/etc/config/std
+        - mountPath: /fluentd/etc/config/precan
           name: config
+        - mountPath: /fluentd/etc/config/entry
+          name: entry
         - mountPath: {{ .Values.cluster.dockerRoot }}
           name: dockerroot
         - mountPath: /var/log/containers
@@ -91,8 +82,6 @@ spec:
           name: customlog
         - mountPath: /fluentd/log
           name: fluentdlog
-        # - mountPath: /fluentd/etc/ssl
-        #   name: sslconfig
         - name: libsystemddir
           mountPath: /host/lib
           readOnly: true
@@ -146,36 +135,22 @@ spec:
         imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
         args:
           - --volume-dir=/fluentd/etc/config
-          # - --volume-dir=/fluentd/etc/ssl
           - --webhook-method=GET
           - --webhook-url=http://127.0.0.1:24444/api/config.reload
         resources:
         {{ toYaml .Values.configmapReload.resources | indent 12 }}
         volumeMounts:
-          # - mountPath: /fluentd/etc/config/cluster
-          #   name: clusterlogging
-          # - mountPath: /fluentd/etc/config/project
-          #   name: projectlogging
           - mountPath: /fluentd/etc/config/custom
             name: custom
-          - mountPath: /fluentd/etc/config/std
+          - mountPath: /fluentd/etc/config/precan
             name: config
-          # - mountPath: /fluentd/etc/config/
-          #   name: config
+          - mountPath: /fluentd/etc/config/entry
+            name: entry
       terminationGracePeriodSeconds: 30
       volumes:
-      # - name: clusterlogging
-      #   secret:
-      #     secretName: {{ .Values.config.clusterLoggingSecretName }}
-      # - name: projectlogging
-      #   secret:
-      #     secretName: {{ .Values.config.projectLoggingSecretName }}
       - hostPath:
           path: /var/lib/rancher/fluentd/etc/config/custom
         name: custom
-      # - hostPath:
-      #     path: /var/lib/rancher/fluentd/etc/config/custom/project
-      #   name: projectcustomlogconfig
       - hostPath:
           path: {{ .Values.cluster.dockerRoot }}
         name: dockerroot
@@ -197,10 +172,9 @@ spec:
       - name: config
         secret:
           secretName: {{ template "fluentd.fullname" . }}
-      # - name: precanconfig
-      #   configMap:
-      #     name: {{ template "fluentd.fullname" . }}-precan-config
-      # It is needed to copy systemd library to decompress journals //todo
+      - name: entry
+        secret:
+          secretName: {{ template "fluentd.fullname" . }}-entry
       - name: libsystemddir
         hostPath:
           path: /usr/lib64

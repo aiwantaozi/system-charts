@@ -1,5 +1,5 @@
 apiVersion: v1
-description: A Fluentd Aggregator Helm chart Continuously Receive Events From The Log Forwarders.
+description: Rancher logging helm chart to support logging function in rancher
 icon: https://raw.githubusercontent.com/fluent/fluentd-docs/master/public/logo/Fluentd_square.png
 name: rancher-logging
 version: 0.1.0

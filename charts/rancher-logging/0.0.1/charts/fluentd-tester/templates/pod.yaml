@@ -24,8 +24,10 @@ spec:
     volumeMounts:
     - mountPath: /fluentd/etc/config/custom
       name: custom
-    - mountPath: /fluentd/etc/config/std
+    - mountPath: /fluentd/etc/config/precan
       name: config
+    - mountPath: /fluentd/etc/config/entry
+      name: entry
   restartPolicy: Never
   volumes:
   - hostPath:
@@ -34,3 +36,6 @@ spec:
   - name: config
     secret:
       secretName: {{ template "fluentd-tester.fullname" . }}
+  - name: entry
+    secret:
+      secretName: {{ template "fluentd-tester.fullname" . }}-entry
