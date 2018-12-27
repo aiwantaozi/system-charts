@@ -43,18 +43,6 @@ spec:
 {{- end }}
     spec:
       serviceAccountName: {{ template "fluentd.fullname" . }}
-      # initContainers:
-      # - name: "dry-run"
-      #   image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
-      #   imagePullPolicy: {{ .Values.initImage.pullPolicy | quote }}
-      #   {{- if .Values.initCommand }}
-      #   command: {{ .Values.initCommand }}
-      #   {{ end }}
-      #   volumeMounts:
-      #   - mountPath: /fluentd/etc/config/custom
-      #     name: custom
-      #   - mountPath: /fluentd/etc/config/std
-      #     name: config
       containers:
       - name: {{ template "fluentd.fullname" . }}
         image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
