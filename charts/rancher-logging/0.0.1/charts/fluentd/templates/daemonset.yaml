@@ -9,6 +9,9 @@ metadata:
     heritage: {{ .Release.Service }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     kubernetes.io/cluster-service: "true"
+{{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 4 }}
+{{- end }}
 spec:
   updateStrategy:
 {{ toYaml .Values.updateStrategy | indent 4 }}
@@ -26,6 +29,9 @@ spec:
         heritage: {{ .Release.Service }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         kubernetes.io/cluster-service: "true"
+    {{- if .Values.labels }}
+    {{ toYaml .Values.labels | indent 4 }}
+    {{- end }}
       # This annotation ensures that fluentd does not get evicted if the node
       # supports critical pod annotation based priority scheme.
       # Note that this does not guarantee admission on the nodes (#40573).

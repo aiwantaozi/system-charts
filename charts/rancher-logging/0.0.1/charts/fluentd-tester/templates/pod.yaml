@@ -9,10 +9,13 @@ metadata:
     heritage: {{ .Release.Service }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     kubernetes.io/cluster-service: "true"
+{{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 4 }}
+{{- end }}
 spec:
   containers:
   - name: "dry-run"
-    image: "{{ .Values.image.repository }}:{{ .Values.initImage.tag }}"
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
     imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
   {{- if .Values.command }}
     command: {{ .Values.command }}

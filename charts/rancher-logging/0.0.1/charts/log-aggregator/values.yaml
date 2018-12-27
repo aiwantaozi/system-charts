@@ -1,5 +1,6 @@
 enabledRBAC: true
 
+labels: {}
 ## Log Aggregator container image
 ##
 image:
