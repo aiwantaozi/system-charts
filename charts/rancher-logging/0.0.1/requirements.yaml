@@ -9,7 +9,7 @@ dependencies:
     condition: log-aggregator.enabled
     repository: "file://./charts/log-aggregator/"
 
-    - name: fluentd-tester
+  - name: fluentd-tester
     version: 0.0.1
     condition: fluentd-tester.enabled
     repository: "file://./charts/fluentd-tester/"
