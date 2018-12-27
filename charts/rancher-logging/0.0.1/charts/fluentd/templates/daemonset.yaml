@@ -134,7 +134,9 @@ spec:
         image: "{{ .Values.configmapReload.image.repository }}:{{ .Values.configmapReload.image.tag }}"
         imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
         args:
-          - --volume-dir=/fluentd/etc/config
+          - --volume-dir=/fluentd/etc/config/custom
+          - --volume-dir=/fluentd/etc/config/precan
+          - --volume-dir=/fluentd/etc/config/entry
           - --webhook-method=GET
           - --webhook-url=http://127.0.0.1:24444/api/config.reload
         resources:
