@@ -14,7 +14,7 @@ resources: {}
   #   memory: 200Mi
 env:
 
-command: '["fluentd", "--dry-run", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
+command: '["sh", "-c", "tail -f /dev/null"]'
 # command: '["fluentd", "-c", "/fluentd/etc/config/std/fluent.conf"]'
 
 rbac:
