@@ -56,8 +56,10 @@ spec:
         volumeMounts:
         - mountPath: /fluentd/etc/config/custom
           name: custom
+        - mountPath: /fluentd/etc/config/generate
+          name: generateconfig
         - mountPath: /fluentd/etc/config/precan
-          name: config
+          name: precanconfig
         - mountPath: /fluentd/etc/config/entry
           name: entry
         - mountPath: /fluentd/etc/config/ssl
@@ -127,6 +129,7 @@ spec:
         imagePullPolicy: "{{ .Values.configmapReload.image.pullPolicy }}"
         args:
           - --volume-dir=/fluentd/etc/config/custom
+          - --volume-dir=/fluentd/etc/config/generate
           - --volume-dir=/fluentd/etc/config/precan
           - --volume-dir=/fluentd/etc/config/ssl
           - --volume-dir=/fluentd/etc/config/entry
@@ -137,8 +140,10 @@ spec:
         volumeMounts:
           - mountPath: /fluentd/etc/config/custom
             name: custom
+          - mountPath: /fluentd/etc/config/generate
+            name: generateconfig
           - mountPath: /fluentd/etc/config/precan
-            name: config
+            name: precanconfig
           - mountPath: /fluentd/etc/config/entry
             name: entry
           - mountPath: /fluentd/etc/config/ssl
@@ -166,7 +171,10 @@ spec:
       - hostPath:
           path: /var/lib/rancher/fluentd/log
         name: fluentdlog
-      - name: config
+      - name: generateconfig
+        secret:
+          secretName: {{ template "fluentd.fullname" . }}
+      - name: precanconfig
         secret:
           secretName: {{ template "fluentd.fullname" . }}
       - name: entry

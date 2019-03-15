@@ -56,13 +56,14 @@ configmapReload:
   resources: {}
 
 secrets:
+  generate: {}
   entry:
     fluent.conf: |-
       @include /fluentd/etc/config/precan/*.conf
 
       @include /fluentd/etc/config/custom/project/*.conf
       @include /fluentd/etc/config/custom/cluster/*.conf
-  config:
+  precanConfig:
     system.conf: |-
       <source>
         @type prometheus
