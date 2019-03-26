@@ -47,3 +47,7 @@ dependencies:
     version: 1.0.5
     condition: certmanager.enabled
     repository: "file://../charts/certmanager"
+  - name: telemetry-gateway
+    version: 1.0.5
+    condition: telemetry-gateway.enabled
+    repository: "file://../charts/telemetry-gateway"

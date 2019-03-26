@@ -221,7 +221,7 @@ ingress:
 # Disable specifc gateway by setting the `enabled` to false.
 #
 gateways:
-  enabled: true
+  enabled: false
 
   istio-ingressgateway:
     enabled: true
@@ -358,7 +358,7 @@ gateways:
 # sidecar-injector webhook configuration
 #
 sidecarInjectorWebhook:
-  enabled: true
+  enabled: false
   replicaCount: 1
   image: sidecar_injector
   enableNamespacesByDefault: false
@@ -367,7 +367,7 @@ sidecarInjectorWebhook:
 # galley configuration
 #
 galley:
-  enabled: true
+  enabled: false
   replicaCount: 1
   image: galley
 
@@ -375,7 +375,7 @@ galley:
 # mixer configuration
 #
 mixer:
-  enabled: true
+  enabled: false
   replicaCount: 1
   autoscaleMin: 1
   autoscaleMax: 5
@@ -406,7 +406,7 @@ mixer:
 # pilot configuration
 #
 pilot:
-  enabled: true
+  enabled: false
   replicaCount: 1
   autoscaleMin: 1
   autoscaleMax: 5
@@ -428,6 +428,7 @@ pilot:
 # security configuration
 #
 security:
+  enabled: false
   replicaCount: 1
   image: citadel
   selfSigned: true # indicate if self-signed CA is used.
@@ -436,6 +437,7 @@ security:
 # addons configuration
 #
 telemetry-gateway:
+  enable: false
   gatewayName: ingressgateway
   grafanaEnabled: false
   prometheusEnabled: false
@@ -463,7 +465,7 @@ grafana:
     internalPort: 3000
 
 prometheus:
-  enabled: true
+  enabled: false
   replicaCount: 1
   hub: docker.io/prom
   tag: v2.3.1
