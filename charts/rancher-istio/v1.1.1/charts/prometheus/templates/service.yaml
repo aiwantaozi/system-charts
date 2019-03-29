@@ -21,3 +21,6 @@ spec:
   - name: access-prometheus
     protocol: TCP
     port: 80
+  - name: prometheus
+    protocol: TCP
+    port: 9090
