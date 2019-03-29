@@ -4,7 +4,7 @@
 enabled: false
 replicaCount: 1
 hub: docker.io/kiali
-tag: v0.14
+tag: v0.16
 contextPath: /
 nodeSelector: {}
 ingress:
@@ -22,6 +22,7 @@ ingress:
     #     - kiali.local
 
 dashboard:
+  authStrategy: login
   secretName: kiali
   username: admin
   passphrase: admin
