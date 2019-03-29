@@ -4,7 +4,7 @@
 enabled: true
 replicaCount: 1
 
-repository: docker.io/prom
+repository: docker.io/prom/prometheus
 tag: v2.3.1
 proxy:
   repository: rancher/nginx

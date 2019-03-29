@@ -104,6 +104,6 @@ spec:
           secretName: istio.default
       - name: prometheus-nginx
         configMap:
-          name: {{ template "prometheus.chart" . }}-proxy
+          name: {{ template "prometheus.chart" . }}-nginx
       affinity:
       {{- include "nodeaffinity" . | indent 6 }}
