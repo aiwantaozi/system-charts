@@ -9,6 +9,8 @@ nodeSelector: {}
 jaeger:
   memory:
     max_traces: 50000
+  proxy:
+    resources: {}
 
 zipkin:
   probeStartupDelay: 200
@@ -28,6 +30,8 @@ zipkin:
   maxSpans: 500000
   node:
     cpus: 2
+  proxy:
+    resources: {}
 
 service:
   annotations: {}
