@@ -1,4 +1,5 @@
 operator:
+  enabled: false
   nameOverride: "prometheus-operator"
   enabledRBAC: true
   apiGroup: "monitoring.coreos.com"
