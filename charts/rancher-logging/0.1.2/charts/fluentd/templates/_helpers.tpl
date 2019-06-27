@@ -46,3 +46,12 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+
+{{- define "system_default_registry" -}}
+{{- if .Values.global.systemDefaultRegistry -}}
+{{- printf "%s/" .Values.global.systemDefaultRegistry -}}
+{{- else -}}
+{{- "" -}}
+{{- end -}}
+{{- end -}}
