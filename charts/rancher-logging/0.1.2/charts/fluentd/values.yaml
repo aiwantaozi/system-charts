@@ -3,6 +3,21 @@ fluentd-linux:
 fluentd-windows:
   enabled: false
 
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  ports:
+    - name: metric
+      port: 24231
+      targetPort: metric
+
+# updateStrategy:
+#   type: RollingUpdate
 
 secrets:
   entry:

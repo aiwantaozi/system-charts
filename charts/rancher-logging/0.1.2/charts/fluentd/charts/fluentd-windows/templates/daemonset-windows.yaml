@@ -35,7 +35,7 @@ spec:
 {{ toYaml .Values.annotations | indent 8 }}
 {{- end }}
     spec:
-      serviceAccountName:  {{ template "fluentd.serviceAccountName"}}
+      serviceAccountName:  {{ template "fluentd.fullname" . }}
       containers:
       - name: {{ template "fluentd.fullname" . }}
         image:  {{ template "system_default_registry" . }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
