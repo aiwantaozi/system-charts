@@ -1,4 +1,4 @@
-{{- if .Values.windows.enabled -}}
+{{- if .Values.enabled -}}
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -28,33 +28,33 @@ spec:
         chart: {{ template "log-aggregator.version" . }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "log-aggregator.fullname" . }}
+      # serviceAccountName: {{ template "log-aggregator.fullname" . }}
       containers:
       - name: log-aggregator
-        image: {{ template "system_default_registry" . }}{{ .Values.windows.image.repository }}:{{ .Values.windows.image.tag }}
-        imagePullPolicy: "{{ .Values.windows.image.pullPolicy }}"
+        image: {{ template "system_default_registry" . }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         securityContext:
           privileged: true
         volumeMounts:
         - name: flexvolume-driver
           mountPath: /flexmnt
-{{- if .Values.windows.env }}
+{{- if .Values.env }}
         env:
-{{ toYaml .Values.windows.env | indent 10 }}
+{{ toYaml .Values.env | indent 10 }}
 {{- end }}
         resources:
-{{ toYaml .Values.windows.resources | indent 10 }}
+{{ toYaml .Values.resources | indent 10 }}
       terminationGracePeriodSeconds: 10
-    {{- if .Values.windows.nodeSelector }}
+    {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.windows.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
       tolerations:
-    {{- if .Values.windows.tolerations }}
-{{ toYaml .Values.windows.tolerations | indent 8 }}
+    {{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
       volumes:
       - name: flexvolume-driver
         hostPath:
-          path: {{ .Values.windows.flexVolumeDir }}
+          path: {{ .Values.flexVolumeDir }}
 {{- end -}}

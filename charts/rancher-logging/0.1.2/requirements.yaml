@@ -3,7 +3,7 @@ dependencies:
     version: 0.0.1
     condition: fluentd.enabled
     repository: "file://./charts/fluentd/"
-
+  
   - name: log-aggregator
     version: 0.0.1
     condition: log-aggregator.enabled

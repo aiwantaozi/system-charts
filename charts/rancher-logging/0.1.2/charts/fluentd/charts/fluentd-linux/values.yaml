@@ -1,0 +1,118 @@
+labels: {}
+
+image:
+  repository: rancher/fluentd
+  tag: v0.1.13
+  pullPolicy: IfNotPresent
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 500Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 200Mi
+# env:
+
+command: '["fluentd", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+
+livenessProbe:
+  enabled: true
+
+annotations: {}
+
+# updateStrategy:
+#   type: RollingUpdate
+
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
+
+nodeSelector: 
+  beta.kubernetes.io/os: linux
+
+service:
+  type: ClusterIP
+  ports:
+    - name: metric
+      port: 24231
+      targetPort: metric
+
+cluster:
+  dockerRoot: /var/lib/docker
+
+configmapReload:
+  name: reloader
+  image:
+    repository: rancher/jimmidyson-configmap-reload
+    tag: v0.2.2
+    pullPolicy: IfNotPresent
+  resources: {}
+
+windows:
+  enabled: false
+  labels: {}
+
+  image:
+    repository: micheliac/fluentd
+    tag: dev-windows-1809
+    pullPolicy: IfNotPresent
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 500Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 200Mi
+  # env:
+
+  command: '["powershell", "-command",  "fluentd", "-vv", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
+  # command: '["powershell", "-command", "fluentd", "-vv"]'
+
+  rbac:
+    create: true
+
+  serviceAccount:
+    create: true
+
+  livenessProbe:
+    enabled: true
+
+  annotations: {}
+
+  # updateStrategy:
+  #   type: RollingUpdate
+
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+
+
+  nodeSelector:
+    beta.kubernetes.io/os: windows
+
+  service:
+    type: ClusterIP
+    ports:
+      - name: metric
+        port: 24231
+        targetPort: metric
+
+  cluster:
+    dockerRoot: C:\ProgramData\docker
+
+  configmapReload:
+    name: windows-reloader
+    image:
+      repository: micheliac/configmap-reload
+      tag: v0.2.2
+      pullPolicy: IfNotPresent
+    resources: {}
