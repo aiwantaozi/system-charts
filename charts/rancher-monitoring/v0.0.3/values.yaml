@@ -164,6 +164,17 @@ exporter-node:
   ##
   serviceAccountName: ""
 
+exporter-node-windows:
+  enabled: false
+  apiGroup: "monitoring.coreos.com"
+  endpoints: []
+  ports:
+    metrics:
+      name: windows-metrics
+      scheme: https
+      port: 9182
+      protocol: TCP
+
 exporter-kube-state:
   enabled: false
   apiGroup: "monitoring.coreos.com"
@@ -188,7 +199,7 @@ alertmanager:
   apiGroup: "monitoring.coreos.com"
   image:
     repository: rancher/prom-alertmanager
-    tag: v0.16.1
+    tag: v0.17.0
   nodeSelectors: []
   resources:
     core:
