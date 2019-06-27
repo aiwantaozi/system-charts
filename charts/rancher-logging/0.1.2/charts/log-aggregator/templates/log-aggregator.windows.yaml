@@ -1,0 +1,60 @@
+{{- if .Values.windows.enabled -}}
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ template "log-aggregator.fullname" . }}-windows
+  labels:
+    app: {{ template "log-aggregator.name" . }}
+    chart: {{ template "log-aggregator.version" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.updateStrategy }}
+  updateStrategy:
+{{ toYaml .Values.updateStrategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "log-aggregator.name" . }}
+      chart: {{ template "log-aggregator.version" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "log-aggregator.name" . }}
+        chart: {{ template "log-aggregator.version" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "log-aggregator.fullname" . }}
+      containers:
+      - name: log-aggregator
+        image: {{ template "system_default_registry" . }}{{ .Values.windows.image.repository }}:{{ .Values.windows.image.tag }}
+        imagePullPolicy: "{{ .Values.windows.image.pullPolicy }}"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: flexvolume-driver
+          mountPath: /flexmnt
+{{- if .Values.windows.env }}
+        env:
+{{ toYaml .Values.windows.env | indent 10 }}
+{{- end }}
+        resources:
+{{ toYaml .Values.windows.resources | indent 10 }}
+      terminationGracePeriodSeconds: 10
+    {{- if .Values.windows.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.windows.nodeSelector | indent 8 }}
+    {{- end }}
+      tolerations:
+    {{- if .Values.windows.tolerations }}
+{{ toYaml .Values.windows.tolerations | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: flexvolume-driver
+        hostPath:
+          path: {{ .Values.windows.flexVolumeDir }}
+{{- end -}}

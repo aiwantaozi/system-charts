@@ -31,4 +31,5 @@ tolerations:
   - effect: NoSchedule
     operator: Exists
 
-nodeSelector: {}
+nodeSelector: 
+  beta.kubernetes.io/os: linux

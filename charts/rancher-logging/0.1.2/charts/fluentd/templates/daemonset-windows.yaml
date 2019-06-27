@@ -1,0 +1,169 @@
+{{- if .Values.windows.enabled -}}
+apiVersion: {{ template "daemonset_api_version" . }}
+kind: DaemonSet
+metadata:
+  name: {{ template "fluentd.fullname" . }}-windows
+  labels:
+    app: {{ template "fluentd.name" . }}
+    chart: {{ template "fluentd.version" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.windows.labels }}
+{{ toYaml .Values.windows.labels | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.windows.updateStrategy }}
+  updateStrategy:
+{{ toYaml .Values.windows.updateStrategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "fluentd.name" . }}
+      chart: {{ template "fluentd.version" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fluentd.name" . }}
+        chart: {{ template "fluentd.version" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    {{- if .Values.windows.labels }}
+    {{ toYaml .Values.windows.labels | indent 4 }}
+    {{- end }}
+{{- if .Values.windows.annotations }}
+{{ toYaml .Values.windows.annotations | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: {{ template "fluentd.fullname" . }}
+      containers:
+      - name: {{ template "fluentd.fullname" . }}
+        image:  {{ template "system_default_registry" . }}{{ .Values.windows.image.repository }}:{{ .Values.windows.image.tag }}
+        imagePullPolicy: {{ .Values.windows.image.pullPolicy | quote }}
+        {{- if .Values.windows.command }}
+        command: {{ .Values.windows.command }}
+        {{ end }}
+        env:
+        {{- range $key, $value := .Values.windows.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        resources:
+{{ toYaml .Values.windows.resources | indent 10 }}
+        volumeMounts:
+        # - mountPath: /fluentd/etc/config/custom
+        #   name: custom
+        - mountPath: /fluentd/etc/config/precan
+          name: config
+        - mountPath: /fluentd/etc/config/entry
+          name: entry
+        - mountPath: /fluentd/etc/config/ssl
+          name: ssl
+        - mountPath: {{ .Values.windows.cluster.dockerRoot }}
+          name: dockerroot
+        - mountPath: /var/log/containers
+          name: varlogcontainers
+        - mountPath: /var/log/pods
+          name: varlogpods
+        # - mountPath: /var/lib/rancher/rke/log
+        #   name: rkelog
+        # - mountPath: /var/lib/rancher/log-volumes
+        #   name: customlog
+        # - mountPath: /fluentd/log
+        #   name: fluentdlog
+        # - name: libsystemddir
+        #   mountPath: /host/lib
+          readOnly: true
+{{- if .Values.windows.extraVolumeMounts }}
+{{ toYaml .Values.windows.extraVolumeMounts | indent 8 }}
+{{- end }}
+        ports:
+{{- range $port := .Values.service.ports }}
+          - name: {{ $port.name }}
+            containerPort: {{ $port.port }}
+{{- if $port.protocol }}
+            protocol: {{ $port.protocol }}
+{{- end }}
+{{- end }}
+{{- if .Values.windows.livenessProbe.enabled }}
+        # Liveness probe is aimed to help in situarions where fluentd
+        # silently hangs for no apparent reasons until manual restart.
+        # The idea of this probe is that if fluentd is not queueing or
+        # flushing chunks for 5 minutes, something is not right. If
+        # you want to change the fluentd configuration, reducing amount of
+        # logs fluentd collects, consider changing the threshold or turning
+        # liveness probe off completely.
+        # TODO
+{{- end }}
+      - name: {{ template "fluentd.fullname" . }}-{{ .Values.configmapReload.name }}
+        image: {{ template "system_default_registry" . }}{{ .Values.windows.configmapReload.image.repository }}:{{ .Values.configmapReload.image.tag }}
+        imagePullPolicy: "{{ .Values.windows.configmapReload.image.pullPolicy }}"
+        args:
+          # - --volume-dir=/fluentd/etc/config/custom
+          - --volume-dir=/fluentd/etc/config/precan
+          - --volume-dir=/fluentd/etc/config/ssl
+          - --volume-dir=/fluentd/etc/config/entry
+          - --webhook-method=GET
+          - --webhook-url=http://127.0.0.1:24444/api/config.reload
+        resources:
+        {{ toYaml .Values.windows.configmapReload.resources | indent 12 }}
+        volumeMounts:
+          # - mountPath: /fluentd/etc/config/custom
+          #   name: custom
+          - mountPath: /fluentd/etc/config/precan
+            name: config
+          - mountPath: /fluentd/etc/config/entry
+            name: entry
+          - mountPath: /fluentd/etc/config/ssl
+            name: ssl
+      terminationGracePeriodSeconds: 30
+      volumes:
+      # - hostPath:
+      #     path: /var/lib/rancher/fluentd/etc/config/custom
+      #   name: custom
+      - hostPath:
+          path: {{ .Values.windows.cluster.dockerRoot }}
+        name: dockerroot
+      - hostPath:
+          path: /var/log/containers
+        name: varlogcontainers
+      - hostPath:
+          path: /var/log/pods
+        name: varlogpods
+      # - hostPath:
+      #     path: /var/lib/rancher/rke/log
+      #   name: rkelog
+      # - hostPath:
+      #     path: /var/lib/rancher/log-volumes
+      #   name: customlog
+      # - hostPath:
+      #     path: /var/lib/rancher/fluentd/log
+      #   name: fluentdlog
+      - name: config
+        secret:
+          secretName: {{ template "fluentd.fullname" . }}
+      - name: entry
+        secret:
+          secretName: {{ template "fluentd.fullname" . }}-entry
+      - name: ssl
+        secret:
+          secretName: {{ template "fluentd.fullname" . }}-ssl
+      # - name: libsystemddir
+      #   hostPath:
+      #     path: /usr/lib64
+{{- if .Values.windows.extraVolumes }}
+{{ toYaml .Values.windows.extraVolumes | indent 6 }}
+{{- end }}
+{{- if .Values.windows.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.windows.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.windows.tolerations }}
+      tolerations:
+{{ toYaml .Values.windows.tolerations | indent 6 }}
+{{- end }}
+{{- end }}
