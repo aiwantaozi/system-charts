@@ -1,14 +1,15 @@
+enabled: false
 enabledRBAC: true
 
 labels: {}
 ## Log Aggregator container image
 ##
 image:
-  repository: rancher/log-aggregator
-  tag: v0.1.5
+  repository: micheliac/log-aggregator
+  tag: windows
 
 nodeSelector: 
-  beta.kubernetes.io/os: linux
+  beta.kubernetes.io/os: windows
 
 # updateStrategy:
 #   type: RollingUpdate
@@ -29,4 +30,4 @@ serviceAccount:
   create: true
 
 ## flexvolume dir
-flexVolumeDir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
+flexVolumeDir: C:/var/lib/kubelet/volumeplugins
