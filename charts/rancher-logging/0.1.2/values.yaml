@@ -1,17 +1,15 @@
 fluentd:
   enabled: false
-  fluentd-linux:
-    enabled: false
-  fluentd-windows:
-    enabled: false
+fluentd-linux:
+  enabled: false
+fluentd-windows:
+  enabled: false
 fluentd-tester:
   enabled: false
-log-aggregator:
+log-aggregator-linux:
+  flexVolumeDir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
   enabled: false
-  log-aggregator-linux:
-    flexVolumeDir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
-    enabled: false
-  log-aggregator-windows:
-    enabled: false
+log-aggregator-windows:
+  enabled: false
 global:
   systemDefaultRegistry: ""

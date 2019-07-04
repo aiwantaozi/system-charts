@@ -3,11 +3,26 @@ dependencies:
     version: 0.0.1
     condition: fluentd.enabled
     repository: "file://./charts/fluentd/"
-  
-  - name: log-aggregator
+
+  - name: fluentd-linux
     version: 0.0.1
-    condition: log-aggregator.enabled
-    repository: "file://./charts/log-aggregator/"
+    condition: fluentd-linux.enabled
+    repository: "file://./charts/fluentd-linux/"
+
+  - name: fluentd-windows
+    version: 0.0.1
+    condition: fluentd-windows.enabled
+    repository: "file://./charts/fluentd-windows/"
+  
+  - name: log-aggregator-linux
+    version: 0.0.1
+    condition: log-aggregator-linux.enabled
+    repository: "file://./charts/log-aggregator-linux/"
+
+  - name: log-aggregator-windows
+    version: 0.0.1
+    condition: log-aggregator-windows.enabled
+    repository: "file://./charts/log-aggregator-windows/"
 
   - name: fluentd-tester
     version: 0.0.1

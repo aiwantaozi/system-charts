@@ -1,8 +1,9 @@
+nameOverride: fluentd
 labels: {}
 
 image:
-  repository: micheliac/fluentd
-  tag: dev-windows-1809
+  repository: rancher/fluentd
+  tag: v0.1.13
   pullPolicy: IfNotPresent
 
 resources: {}
@@ -14,8 +15,7 @@ resources: {}
   #   memory: 200Mi
 # env:
 
-command: '["powershell", "-command",  "fluentd", "-vv", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
-# command: '["powershell", "-command", "fluentd", "-vv"]'
+command: '["fluentd", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
 
 livenessProbe:
   enabled: true
@@ -30,11 +30,18 @@ tolerations:
     operator: Exists
 
 
-nodeSelector:
-  beta.kubernetes.io/os: windows
+nodeSelector: 
+  beta.kubernetes.io/os: linux
+
+service:
+  type: ClusterIP
+  ports:
+    - name: metric
+      port: 24231
+      targetPort: metric
 
 cluster:
-  dockerRoot: C:\ProgramData\docker
+  dockerRoot: /var/lib/docker
 
 service:
   ports:
@@ -43,9 +50,9 @@ service:
       targetPort: metric
 
 configmapReload:
-  name: windows-reloader
+  name: reloader
   image:
-    repository: micheliac/configmap-reload
+    repository: rancher/jimmidyson-configmap-reload
     tag: v0.2.2
     pullPolicy: IfNotPresent
   resources: {}

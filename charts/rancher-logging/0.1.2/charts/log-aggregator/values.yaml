@@ -1,4 +1,0 @@
-log-aggregator-linux:
-  enabled: false
-log-aggregator-windows:
-  enabled: false
