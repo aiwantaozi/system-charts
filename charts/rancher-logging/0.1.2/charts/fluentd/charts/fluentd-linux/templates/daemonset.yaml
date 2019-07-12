@@ -1,7 +1,7 @@
 apiVersion: {{ template "daemonset_api_version" . }}
 kind: DaemonSet
 metadata:
-  name: {{ template "fluentd.fullname" . }}
+  name: {{ template "fluentd.fullname" . }}-linux
   labels:
     app: {{ template "fluentd.name" . }}
     chart: {{ template "fluentd.version" . }}
@@ -181,8 +181,13 @@ spec:
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 6 }}
 {{- end }}
-{{- if .Values.nodeSelector }}
       nodeSelector:
+{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion }}
+        beta.kubernetes.io/os: linux
+{{- else}}
+        kubernetes.io/os: linux
+{{- end}}
+{{- if .Values.nodeSelector }}
 {{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
 {{- if .Values.tolerations }}

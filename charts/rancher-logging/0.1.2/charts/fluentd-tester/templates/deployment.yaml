@@ -69,8 +69,13 @@ spec:
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 6 }}
 {{- end }}
-{{- if .Values.nodeSelector }}
       nodeSelector:
+{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion }}
+        beta.kubernetes.io/os: linux
+{{- else}}
+        kubernetes.io/os: linux
+{{- end}}
+{{- if .Values.nodeSelector }}
 {{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
 {{- if .Values.tolerations }}
