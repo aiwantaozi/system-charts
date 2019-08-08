@@ -1,8 +1,8 @@
 labels: {}
 
 image:
-  repository: rancher/fluentd
-  tag: v0.1.13
+  repository: micheliac/fluentd
+  tag: 5508096
   pullPolicy: IfNotPresent
 
 resources: {}
@@ -251,7 +251,7 @@ secrets:
           workload_name ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); component['workload_name']}
           volume_name ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); component['volume_name']}
           filename ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); component['filename']}
-          format ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); component['format']}
+          log_format ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); component['format']}
           cluster_project ${component = tag.match(Regexp.compile('tmp-project-custom\.var\.lib\.rancher\.log-volumes\.((?<pod_id>[^_]+)_(?<volume_name>[^_]+))\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])*)_(?<container_name>[^_^.]+)\.(?<filename>.+)')); "#{component['cluster_id']}:#{component['project_id']}"}
         </record>
       </filter>
@@ -351,7 +351,7 @@ secrets:
           workload_name ${component = tag.match(Regexp.compile('tmp2\.cluster-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['workload_name']}
           volume_name ${component = tag.match(Regexp.compile('tmp2\.cluster-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['volume_name']}
           filename ${component = tag.match(Regexp.compile('tmp2\.cluster-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['filename']}
-          format ${component = tag.match(Regexp.compile('tmp2\.cluster-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['format']}
+          log_format ${component = tag.match(Regexp.compile('tmp2\.cluster-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>[^_]+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['format']}
         </record>
       </filter>
 
@@ -421,7 +421,7 @@ secrets:
           workload_name ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['workload_name']}
           volume_name ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['volume_name']}
           filename ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['filename']}
-          format ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['format']}
+          log_format ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); component['format']}
           cluster_project ${component = tag.match(Regexp.compile('tmp2\.tmp2-project-custom\.var\.lib\.rancher\.log-volumes\.(?<format>[a-z0-9]+)\.(?<cluster_id>.+)_(?<cluster_name>[^_]+)_(?<namespace>[^_]+)_(?<project_id>[^_]+)_(?<project_name>[^_]+)_(?<workload_name>[^_]+)_(?<container_name>[^_]+)_(?<volume_name>[^_^.]+)\.(?<filename>.+)$')); "#{component['cluster_id']}:#{component['project_id']}"}
         </record>
       </filter>
