@@ -2,7 +2,7 @@ labels: {}
 
 image:
   repository: micheliac/fluentd
-  tag: 5508096
+  tag: '5508096'
   pullPolicy: IfNotPresent
 
 resources: {}
@@ -14,7 +14,7 @@ resources: {}
   #   memory: 200Mi
 # env:
 
-command: '["fluentd", "-c", "/fluentd/etc/config/entry/fluent.conf"]'
+command: '["fluentd", "-c", "/fluentd/etc/config/entry/fluent.conf", "-v"]'
 
 rbac:
   create: true
@@ -124,7 +124,9 @@ secrets:
         path /var/lib/rancher/log-volumes/*/json/*/*
         pos_file /fluentd/log/custom_cluster_json_new.log.pos
         tag tmp-cluster-custom.*
-        format json
+        <parse>
+          @type json
+        </parse>
       </source>
 
       <source>
