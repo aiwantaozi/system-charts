@@ -99,14 +99,15 @@ spec:
         # liveness probe off completely.
         # use metrics endpoint to monitor liveness
         livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 24231
+            scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 60
-          exec:
-            command:
-            - '/bin/sh'
-            - '-c'
-            - >
-              curl -I http://127.0.0.1:24231/metrics;
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 2
 {{- end }}
       - name: {{ template "fluentd.fullname" . }}-{{ .Values.configmapReload.name }}
         image: {{ template "system_default_registry" . }}{{ .Values.configmapReload.image.repository }}:{{ .Values.configmapReload.image.tag }}
