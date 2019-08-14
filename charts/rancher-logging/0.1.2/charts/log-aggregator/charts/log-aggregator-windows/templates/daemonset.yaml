@@ -19,7 +19,6 @@ spec:
   selector:
     matchLabels:
       app: {{ template "log-aggregator.name" . }}
-      chart: {{ template "log-aggregator.version" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
