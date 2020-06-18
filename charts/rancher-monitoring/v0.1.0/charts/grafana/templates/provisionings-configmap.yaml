@@ -8,6 +8,18 @@ metadata:
     release: {{ .Release.Name }}
   name: {{ template "app.provisionings.fullname" . }}
 data:
+  grafana.init: |
+    [users]
+    allow_sign_up = false
+    auto_assign_org = true
+    auto_assign_org_role = Editor
+
+    [auth.proxy]
+    enabled = true
+    header_name = rancher_access_key
+    header_property = username
+    auto_sign_up = true
+
   dashboards.yaml: |+
     - name: RANCHER_MONITORING
       orgId: 1
@@ -26,7 +38,6 @@ data:
       options:
         path: /var/lib/grafana/rancher-istio-dashboards
 
-
   datasources.yaml: |+
     apiVersion: 1
 
@@ -38,3 +49,14 @@ data:
       editable: false
       isDefault: true
       url: {{ .Values.prometheusDatasourceURL }}
+    - name: ECHO
+      type: prometheus
+      access: proxy
+      basicAuth: false
+      editable: false
+      isDefault: true
+      url: http://echo.default.svc:80
+      jsonData:
+          httpHeaderName1: 'rancher_access_key'
+          httpHeaderName2: 'rancher_access_secret'
+          httpHeaderName3: 'rancher_token'
