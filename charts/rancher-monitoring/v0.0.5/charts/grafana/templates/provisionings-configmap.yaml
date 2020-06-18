@@ -20,6 +20,9 @@ data:
     header_property = username
     auto_sign_up = true
 
+    [log.console]
+    level = debug
+
   dashboards.yaml: |+
     - name: RANCHER_MONITORING
       orgId: 1
@@ -50,7 +53,10 @@ data:
       editable: false
       isDefault: true
       url: {{ .Values.prometheusDatasourceURL }}
-    
+      secureJsonData:
+          httpHeaderName1: 'rancher_access_key'
+          httpHeaderName2: 'rancher_access_secret'
+          httpHeaderName3: 'rancher_token'
     - name: ECHO
       type: prometheus
       access: proxy
@@ -58,7 +64,7 @@ data:
       editable: false
       isDefault: false
       url: http://echo.default.svc:80
-      jsonData:
+      secureJsonData:
           httpHeaderName1: 'rancher_access_key'
           httpHeaderName2: 'rancher_access_secret'
           httpHeaderName3: 'rancher_token'
