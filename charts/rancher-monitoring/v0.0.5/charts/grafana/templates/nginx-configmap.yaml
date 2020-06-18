@@ -106,6 +106,16 @@ data:
           if ($request_filename ~ .*\.(?:js|css|jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm)$) {
             expires             90d;
           }
+
+          if ($cookie_r_sess ~* "([a-zA-Z0-9_\-]+):(\w+)") {
+              set $rancher_access_key $1;
+              set $rancher_access_secret $2;
+          }
+
+          proxy_set_header rancher_access_key $rancher_access_key;
+          proxy_set_header rancher_access_secret $rancher_access_secret;
+          proxy_set_header rancher_token $cookie_r_sess;
+
         }
       }
     }
