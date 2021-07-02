@@ -47,6 +47,8 @@ spec:
             - --log-level={{ .Values.logLevel }}
             - --prometheus-config-reloader={{ template "system_default_registry" . }}{{ .Values.image.prometheusConfigReloader.repository }}:{{ .Values.image.prometheusConfigReloader.tag }}
             - --config-reloader-image={{ template "system_default_registry" . }}{{ .Values.image.configmapReload.repository }}:{{ .Values.image.configmapReload.tag }}
+            - --config-reloader-cpu={{ .Values.resources.prometheusConfigReloader.limits.cpu }}
+            - --config-reloader-memory={{ .Values.resources.prometheusConfigReloader.limits.memory }}
             - --labels={{ .Values.apiGroup }}=true
             - --manage-crds={{ .Values.manageCRDs }}
             - --with-validation={{ .Values.withValidation }}

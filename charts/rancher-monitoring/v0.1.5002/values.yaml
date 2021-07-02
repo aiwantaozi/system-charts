@@ -18,6 +18,10 @@ operator:
     requests:
       cpu: 100m
       memory: 50Mi
+    prometheusConfigReloader:
+      limits:
+        cpu: 100m
+        memory: 50Mi
   nodeSelectors: []
   tolerations: []
   logFormat: "logfmt"
